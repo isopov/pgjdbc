@@ -15,7 +15,16 @@ then
     MVN_PROFILES="$MVN_PROFILES,coverage"
 fi
 
-if [[ "${TRAVIS_JDK_VERSION}" == *"jdk6"* ]];
+if [[ "${UNIXSOCKET}" == *"Y"* ]];
+then
+  #to be able to use in this test additions from the same commit
+  mvn clean install -DskipTests
+  #user travis is already created
+  psql -c "create database sockettest owner `whoami`;" -U postgres
+  PGJDBC_VERSION=$(mvn -q -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec)
+  cd pgjdbc-unixsocket-test
+  mvn ${MVN_ARGS} -P ${MVN_PROFILES} -Dpgjdbc.version=$PGJDBC_VERSION
+elif [[ "${TRAVIS_JDK_VERSION}" == *"jdk6"* ]];
 then
     git clone --depth=50 https://github.com/pgjdbc/pgjdbc-jre6.git pgjdbc-jre6
     cd pgjdbc-jre6

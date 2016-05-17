@@ -59,6 +59,12 @@ matrix:
       sudo: required
       dist: trusty
       env:
+        - PG_VERSION=9.5
+        - UNIXSOCKET=Y
+    - jdk: oraclejdk8
+      sudo: required
+      dist: trusty
+      env:
         - PG_VERSION=8.4
         - XA=true
         - COVERAGE=Y
